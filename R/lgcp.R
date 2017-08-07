@@ -30,7 +30,7 @@
 ###'
 ###' \section{Dependencies}{
 ###' The \code{lgcp} package depends upon some other important contributions to CRAN in order to operate; their uses here are indicated:\cr\cr
-###'     spatstat, sp, RandomFields, iterators, ncdf, methods, tcltk, rgl, rpanel, fields, rgdal, maptools, rgeos, raster
+###'     spatstat, sp, RandomFields, iterators, ncdf, methods, tcltk, rgl, fields, rgdal, maptools, rgeos, raster
 ###' }
 ###'
 ###' \section{Citation}{
@@ -58,7 +58,6 @@
 ###' @import spatstat.utils
 ###' @importFrom RandomFields CovarianceFct
 ###' @importFrom Matrix sparseMatrix
-###' @importFrom rpanel rp.block rp.button rp.control rp.radiogroup rp.slider rp.textentry rp.checkbox
 ###' @importFrom tcltk setTkProgressBar tclvalue tkProgressBar tkwinfo tkwm.geometry
 ###' @importFrom rgeos gDisjoint gIntersection gIntersects gTouches gUnaryUnion
 ###' @importFrom ncdf4 nc_open nc_close nc_sync ncvar_get ncdim_def ncvar_def nc_create ncvar_put
