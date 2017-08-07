@@ -40,7 +40,7 @@ the Creative Commons Attribution-ShareAlike 3.0 Unported License and the Open Go
 
 \section{Dependencies}{
 The \code{lgcp} package depends upon some other important contributions to CRAN in order to operate; their uses here are indicated:\cr\cr
-    spatstat, sp, RandomFields, iterators, ncdf, methods, tcltk, rgl, rpanel, fields, rgdal, maptools, rgeos, raster
+    spatstat, sp, RandomFields, iterators, ncdf, methods, tcltk, rgl, fields, rgdal, maptools, rgeos, raster
 }
 
 \section{Citation}{
