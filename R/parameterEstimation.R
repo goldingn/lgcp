@@ -22,7 +22,7 @@
 ##'     \item Brix A, Diggle PJ (2001). Spatiotemporal Prediction for log-Gaussian Cox processes. Journal of the Royal Statistical Society, Series B, 63(4), 823-841.
 ##'     \item Diggle P, Rowlingson B, Su T (2005). Point Process Methodology for On-line Spatio-temporal Disease Surveillance. Environmetrics, 16(5), 423-434.
 ##' }
-##' @seealso \link{KinhomAverage}, \link{spatialparsEst}, \link{thetaEst}, \link{lambdaEst}, \link{muEst}
+##' @seealso \link{KinhomAverage}
 ##' @export
 
 ginhomAverage <- function(xyt,spatial.intensity,temporal.intensity,time.window=xyt$tlim,rvals=NULL,correction="iso",suppresswarnings=FALSE,...){
@@ -119,7 +119,7 @@ ginhomAverage <- function(xyt,spatial.intensity,temporal.intensity,time.window=x
 ##'     \item Brix A, Diggle PJ (2001). Spatiotemporal Prediction for log-Gaussian Cox processes. Journal of the Royal Statistical Society, Series B, 63(4), 823-841.
 ##'     \item Diggle P, Rowlingson B, Su T (2005). Point Process Methodology for On-line Spatio-temporal Disease Surveillance. Environmetrics, 16(5), 423-434.
 ##' }
-##' @seealso \link{ginhomAverage}, \link{spatialparsEst}, \link{thetaEst}, \link{lambdaEst}, \link{muEst}
+##' @seealso \link{ginhomAverage}
 ##' @export
 
 KinhomAverage <- function(xyt,spatial.intensity,temporal.intensity,time.window=xyt$tlim,rvals=NULL,correction="iso",suppresswarnings=FALSE){
@@ -192,70 +192,6 @@ KinhomAverage <- function(xyt,spatial.intensity,temporal.intensity,time.window=x
     attr(Kinhom,"correction") <- correction
     cat("Returning an average of",ct,"curves\n")
     return(Kinhom)
-}
-
-##' Cvb function
-##'
-##' This function is used in \code{thetaEst} to estimate the temporal correlation parameter, theta.
-##'
-##' @param xyt object of class stppp
-##' @param spatial.intensity bivariate density estimate of lambda, an object of class im (produced from density.ppp for example)
-##' @param N number of integration points
-##' @param spatial.covmodel spatial covariance model
-##' @param covpars additional covariance parameters
-##' @return a function, see below.
-##' Computes Monte carlo estimate of function C(v;beta) in Brix and Diggle 2001 pp 829 (... note later corrigendum to paper (2003) corrects the expression given in this paper)
-##' @references 
-##' \enumerate{
-##'     \item Benjamin M. Taylor, Tilman M. Davies, Barry S. Rowlingson, Peter J. Diggle (2013). Journal of Statistical Software, 52(4), 1-40. URL http://www.jstatsoft.org/v52/i04/
-##'     \item Brix A, Diggle PJ (2001). Spatiotemporal Prediction for log-Gaussian Cox processes. Journal of the Royal Statistical Society, Series B, 63(4), 823-841.
-##' }
-##' @seealso \link{thetaEst}
-##' @export
-
-Cvb <- function(xyt,spatial.intensity,N=100,spatial.covmodel,covpars){
-    verifyclass(spatial.intensity,"im")
-    sar <- spatialAtRisk(list(X=spatial.intensity$xcol,Y=spatial.intensity$yrow,Zm=t(spatial.intensity$v)))
-    gsx <- length(xvals(sar))
-    gsy <- length(yvals(sar))
-    xy <- cbind(rep(xvals(sar),gsy),rep(yvals(sar),each=gsx))
-    wt <- as.vector(zvals(sar))
-    wt[is.na(wt)] <- 0
-    sidx <- sample(1:(gsx*gsy),N,prob=wt)
-    xy <- xy[sidx,]
-    pd <- as.vector(pairdist(xy))
-    cvb <- function(nu,sigma,phi,theta){
-        return(mean(exp(exp(-nu*theta)*gu(pd,sigma=sigma,phi=phi,model=spatial.covmodel,additionalparameters=covpars))-1))    
-    }
-    return(cvb)  
-}                                                                    
-
-
-##' muEst function
-##'
-##' Computes a non-parametric estimate of mu(t). For the purposes of performing prediction, the alternatives are: (1) use a parameteric model as in Diggle P, Rowlingson B, Su T (2005),
-##' or (2) a \link{constantInTime} model.
-##'
-##' @param xyt an stppp object
-##' @param ... additional arguments to be passed to lowess
-##' @return object of class temporalAtRisk giving the smoothed mut using the lowess function
-##' @references 
-##' \enumerate{
-##'     \item Benjamin M. Taylor, Tilman M. Davies, Barry S. Rowlingson, Peter J. Diggle (2013). Journal of Statistical Software, 52(4), 1-40. URL http://www.jstatsoft.org/v52/i04/
-##'     \item Brix A, Diggle PJ (2001). Spatiotemporal Prediction for log-Gaussian Cox processes. Journal of the Royal Statistical Society, Series B, 63(4), 823-841.
-##'     \item Diggle P, Rowlingson B, Su T (2005). Point Process Methodology for On-line Spatio-temporal Disease Surveillance. Environmetrics, 16(5), 423-434.
-##' }
-##' @seealso \link{temporalAtRisk}, \link{constantInTime}, \link{ginhomAverage}, \link{KinhomAverage}, \link{spatialparsEst}, \link{thetaEst}, \link{lambdaEst}
-##' @export
-
-muEst <- function(xyt,...){
-    verifyclass(xyt,"stppp")
-    t <- as.integer(xyt$t)
-    tlim <- as.integer(xyt$tlim)
-    tseq <- tlim[1]:tlim[2]
-    counts <- sapply(tseq,function(x){sum(t==x)})
-    sm <- lowess(tseq,sqrt(counts),...)
-    return(temporalAtRisk(sm$y^2,tlim=tlim,xyt=xyt))
 }
 
 
