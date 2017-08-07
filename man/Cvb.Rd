@@ -30,6 +30,3 @@ This function is used in \code{thetaEst} to estimate the temporal correlation pa
     \item Brix A, Diggle PJ (2001). Spatiotemporal Prediction for log-Gaussian Cox processes. Journal of the Royal Statistical Society, Series B, 63(4), 823-841.
 }
 }
-\seealso{
-\link{thetaEst}
-}
